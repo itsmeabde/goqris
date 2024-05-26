@@ -70,9 +70,9 @@ func (bni Bni) getAccessToken() (string, error) {
 		return "", data.Err
 	}
 
-	if _, ok := data.Data["access_token"]; !ok {
-		errCode, _ := data.Data["code"].(string)
-		errDesc, _ := data.Data["error"].(string)
+	if ac := data.Data.GetValue("access_token"); ac == "" {
+		errCode := data.Data.GetValue("code")
+		errDesc := data.Data.GetValue("error")
 		return "", fmt.Errorf("BNI(%s) - %s", errCode, errDesc)
 	}
 
