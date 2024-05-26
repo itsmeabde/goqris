@@ -130,24 +130,25 @@ func getAccessTokenFromCache(key string) string {
 	return accessToken
 }
 
-func setAccessTokenToCache(key string, data map[string]any) (string, error) {
-	accessToken, ok := data["access_token"].(string)
-	if !ok {
-		accessToken, ok = data["accessToken"].(string)
-		if !ok {
+func setAccessTokenToCache(key string, m M) (string, error) {
+	var (
+		accessToken string
+		expiresIn   string
+	)
+
+	if accessToken = m.GetValue("access_token"); accessToken == "" {
+		if accessToken = m.GetValue("accessToken"); accessToken == "" {
 			return "", errors.New("the key of access_token or accessToken is undefined")
 		}
 	}
 
-	expStr, ok := data["expires_in"].(string)
-	if !ok {
-		expStr, ok = data["expiresIn"].(string)
-		if !ok {
+	if expiresIn = m.GetValue("expires_in"); expiresIn == "" {
+		if expiresIn = m.GetValue("expiresIn"); expiresIn == "" {
 			return "", errors.New("the key of expires_in or expiresIn is undefined")
 		}
 	}
 
-	expInt, err := strconv.ParseInt(expStr, 10, 64)
+	expInt, err := strconv.ParseInt(expiresIn, 10, 64)
 	if err != nil {
 		return "", err
 	}
