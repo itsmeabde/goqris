@@ -22,37 +22,37 @@ import (
 
 func main() {
     briMmpDynamic := &goqris.BriMpmDynamic{
-	    Host:         "https://sandbox.partner.api.bri.co.id",
-	    ClientID:     "*****",
-	    ClientSecret: "*****",
-	    PrivateKey:   "path/to/private.pem",
-	    MerchantID:   "*****",
-	    TerminalID:   "*****",
-	    PartnerID:    "*****",
-	    ChannelID:    "YOUR-CHANNEL-NAME",
-	    Timezone:     "CUSTOM-TIMEZONE",
+	Host:         "https://sandbox.partner.api.bri.co.id",
+	ClientID:     "*****",
+	ClientSecret: "*****",
+	PrivateKey:   "path/to/private.pem",
+	MerchantID:   "*****",
+	TerminalID:   "*****",
+	PartnerID:    "*****",
+	ChannelID:    "YOUR-CHANNEL-NAME",
+	Timezone:     "CUSTOM-TIMEZONE",
     }
 
     req := goqris.BriMpmDynamicGenerateQRCodeRequest{
-		PartnerReferenceNo: "YOUR-ID",
-		Amount:             "15001.00",
-		Currency:           "IDR",
-	}
+	PartnerReferenceNo: "YOUR-ID",
+	Amount:             "15001.00",
+	Currency:           "IDR",
+    }
 
     res, err := briMmpDynamic.GenerateQRCode(req)
-	if err != nil {
-		panic(err)
-	}
+    if err != nil {
+	panic(err)
+    }
 
-    dataBytes, _ := json.Marshal(res)
-    dataStr := string(dataBytes)
+    jsonBytes, _ := json.Marshal(res)
+    jsonStr := string(jsonBytes)
 
-    // check if request successful
-	if successful := res.SuccessfulGenerate(); !successful {
-		panic(dataStr)
-	}
+    // check if request is successful
+    if successful := res.SuccessfulGenerate(); !successful {
+	panic(jsonStr)
+    }
 
-    log.Println(dataStr)
+    log.Println(jsonStr)
 
     //	{
     //	  "responseCode": "2004700",
@@ -63,9 +63,9 @@ func main() {
     //	}
 
     // get reference no -> required for check status transaction
-	referenceNo := res.RefNo()
-	// get service code -> required for check status transaction
-	serviceCode := res.ServiceCode()
+    referenceNo := res.RefNo()
+    // get service code -> required for check status transaction
+    serviceCode := res.ServiceCode()
 }
 ```
 
@@ -82,36 +82,36 @@ import (
 
 func main() {
     briMmpDynamic := &goqris.BriMpmDynamic{
-	    Host:         "https://sandbox.partner.api.bri.co.id",
-	    ClientID:     "*****",
-	    ClientSecret: "*****",
-	    PrivateKey:   "path/to/private.pem",
-	    MerchantID:   "*****",
-	    TerminalID:   "*****",
-	    PartnerID:    "*****",
-	    ChannelID:    "YOUR-CHANNEL-NAME",
-	    Timezone:     "CUSTOM-TIMEZONE",
+	Host:         "https://sandbox.partner.api.bri.co.id",
+	ClientID:     "*****",
+	ClientSecret: "*****",
+	PrivateKey:   "path/to/private.pem",
+	MerchantID:   "*****",
+	TerminalID:   "*****",
+	PartnerID:    "*****",
+	ChannelID:    "YOUR-CHANNEL-NAME",
+	Timezone:     "CUSTOM-TIMEZONE",
     }
 
     req := goqris.BriMpmDynamicCheckStatusTransactionRequest{
-		OriginalReferenceNo: "000008526955",
-		ServiceCode:         "47",
-	}
+	OriginalReferenceNo: "000008526955",
+	ServiceCode:         "47",
+    }
 
     res, err := briMmpDynamic.CheckStatusTransaction(req)
-	if err != nil {
-		panic(err)
-	}
+    if err != nil {
+	panic(err)
+    }
 
-    dataBytes, _ := json.Marshal(res)
-    dataStr := string(dataBytes)
+    jsonBytes, _ := json.Marshal(res)
+    jsonStr := string(jsonBytes)
 
-    // check if request successful
-	if successful := res.SuccessfulPaid(); !successful {
-		panic(dataStr)
-	}
+    // check if request is successful
+    if successful := res.SuccessfulPaid(); !successful {
+	panic(jsonStr)
+    }
 
-    log.Println(dataStr)
+    log.Println(jsonStr)
 
     //	{
     //	  "responseCode": "2005100",
@@ -137,6 +137,7 @@ func main() {
 ```
 
 ### BNI
+Generate QRCode
 ```go
 package main
 
@@ -150,40 +151,40 @@ import (
 
 func main() {
     bni := &goqris.Bni{
-	    Host:         "https://mom-trxauth.spesandbox.com",
-	    Username:     "*****",
-	    Password:     "*****",
-	    ClientID:     "*****",
-	    ClientSecret: "*****",
-	    HmacKey:      "*****",
-	    MerchantID:   "*****",
-	    TerminalID:   "*****",
+	Host:         "https://mom-trxauth.spesandbox.com",
+	Username:     "*****",
+	Password:     "*****",
+	ClientID:     "*****",
+	ClientSecret: "*****",
+	HmacKey:      "*****",
+	MerchantID:   "*****",
+	TerminalID:   "*****",
     }
 
     // create expired transaction
-	layoutLocal := "2006-01-02T15:04:05"
-	exp := time.Now().Add(1 * time.Hour).Format(layoutLocal)
+    layoutLocal := "2006-01-02T15:04:05"
+    exp := time.Now().Add(1 * time.Hour).Format(layoutLocal)
 
     req := goqris.BniGenerateQRCodeRequest{
-		RequestID: "YOUR-ID",
-		Amount:    "5000.00",
-		QRExpired: exp,
-	}
+	RequestID: "YOUR-ID",
+	Amount:    "10000.00",
+	QRExpired: exp,
+    }
 
     res, err := bni.GenerateQRCode(req)
-	if err != nil {
-		panic(err)
-	}
+    if err != nil {
+	panic(err)
+    }
 
-    dataBytes, _ := json.Marshal(res)
-    dataStr := string(dataBytes)
+    jsonBytes, _ := json.Marshal(res)
+    jsonStr := string(jsonBytes)
 
-    // check if request successful
-	if successful := res.SuccessfulGenerate(); !successful {
-		panic(dataStr)
-	}
+    // check if request is successful
+    if successful := res.SuccessfulGenerate(); !successful {
+	panic(dataStr)
+    }
 
-    log.Println(dataStr)
+    log.Println(jsonStr)
 
     //	{
     //	  "code": "00",
@@ -195,7 +196,7 @@ func main() {
     //	}
 
     // get bill number -> required for check status transaction
-	billNumber := res.RefNo()
+    billNumber := res.RefNo()
 }
 ```
 
@@ -214,61 +215,61 @@ import (
 
 func main() {
     bni := &goqris.Bni{
-	    Host:         "https://mom-trxauth.spesandbox.com",
-	    Username:     "*****",
-	    Password:     "*****",
-	    ClientID:     "*****",
-	    ClientSecret: "*****",
-	    HmacKey:      "*****",
-	    MerchantID:   "*****",
-	    TerminalID:   "*****",
+	Host:         "https://mom-trxauth.spesandbox.com",
+	Username:     "*****",
+	Password:     "*****",
+	ClientID:     "*****",
+	ClientSecret: "*****",
+	HmacKey:      "*****",
+	MerchantID:   "*****",
+	TerminalID:   "*****",
     }
 
     requestId := strconv.FormatInt(time.Now().Unix(), 10)
     req := goqris.BniCheckStatusTransactionRequest{
-		RequestID:  requestId,
-		BillNumber: "C000011957",
-	}
+	RequestID:  requestId,
+	BillNumber: "C000011957",
+    }
 
     res, err := bni.CheckStatusTransaction(req)
-	if err != nil {
-		panic(err)
-	}
+    if err != nil {
+	panic(err)
+    }
 
-    dataBytes, _ := json.Marshal(res)
-    dataStr := string(dataBytes)
+    jsonBytes, _ := json.Marshal(res)
+    jsonStr := string(jsonBytes)
 
-    // check if request successful
-	if successful := res.SuccessfulPaid(); !successful {
-		panic(dataStr)
-	}
+    // check if request is successful
+    if successful := res.SuccessfulPaid(); !successful {
+	panic(jsonStr)
+    }
 
-    log.Println(dataStr)
+    log.Println(jsonStr)
 
     //	{
-    //		"code": "00",
-    //		"message": "success",
-    //		"request_id": "XwVjF5zfuHhrDZuw",
-    //		"customer_pan": "9360001110000000019",
-    //		"amount": "10000.00",
-    //		"transaction_datetime": "2021-02-25T13:36:13",
-    //		"amount_fee": "1000.00",
-    //		"rrn": "123456789012",
-    //		"bill_number": "12345678901234567890",
-    //		"issuer_code": "93600013",
-    //		"customer_name": "John Doe",
-    //		"terminal_id": "00005771",
-    //		"merchant_id": "008800223497",
-    //		"stan": "210226",
-    //		"merchant_name": "Sukses Makmur Bendungan Hilir",
-    //		"approval_code": "00",
-    //		"merchant_pan": "936000131600000003",
-    //		"mcc": "5814",
-    //		"merchant_city": "Jakarta Pusat",
-    //		"merchant_country": "ID",
-    //		"currency_code": "360",
-    //		"payment_status": "00",
-    //		"payment_description": "Payment Success"
+    //	    "code": "00",
+    //	    "message": "success",
+    //	    "request_id": "XwVjF5zfuHhrDZuw",
+    //	    "customer_pan": "9360001110000000019",
+    //	    "amount": "10000.00",
+    //	    "transaction_datetime": "2021-02-25T13:36:13",
+    //	    "amount_fee": "1000.00",
+    //	    "rrn": "123456789012",
+    //	    "bill_number": "12345678901234567890",
+    //	    "issuer_code": "93600013",
+    //	    "customer_name": "John Doe",
+    //	    "terminal_id": "00005771",
+    //	    "merchant_id": "008800223497",
+    //	    "stan": "210226",
+    //	    "merchant_name": "Sukses Makmur Bendungan Hilir",
+    //	    "approval_code": "00",
+    //	    "merchant_pan": "936000131600000003",
+    //	    "mcc": "5814",
+    //	    "merchant_city": "Jakarta Pusat",
+    //	    "merchant_country": "ID",
+    //	    "currency_code": "360",
+    //	    "payment_status": "00",
+    //	    "payment_description": "Payment Success"
     //	}
 }
 ```
