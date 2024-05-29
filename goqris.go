@@ -100,7 +100,7 @@ func (m M) ServiceCode() string {
 }
 
 // cache access token
-var cache = map[string]map[string]string{}
+var cache = make(map[string]map[string]string)
 
 func getAccessTokenFromCache(key string) string {
 	c, ok := cache[key]
