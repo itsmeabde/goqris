@@ -12,6 +12,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"encoding/pem"
+	"errors"
 	"fmt"
 	mathrand "math/rand"
 	"os"
@@ -19,12 +20,14 @@ import (
 	"time"
 )
 
+var ErrInvalidPrivateKey = errors.New("invalid private key")
+
 type BriMpmDynamic struct {
 	Host         string
 	ClientID     string
 	ClientSecret string
 	PartnerID    string
-	PrivateKey   string
+	PrivateKey   string // can be filename OR content of file
 	MerchantID   string
 	TerminalID   string
 	ChannelID    string
@@ -32,13 +35,23 @@ type BriMpmDynamic struct {
 }
 
 func (mpm BriMpmDynamic) getPrivateKey() (*rsa.PrivateKey, error) {
+	var p *pem.Block
 	c, err := os.ReadFile(mpm.PrivateKey)
 	if err != nil {
+		p, _ = pem.Decode([]byte(mpm.PrivateKey))
+	} else {
+		p, _ = pem.Decode(c)
+	}
+
+	if p == nil {
+		if err == nil {
+			err = ErrInvalidPrivateKey
+		}
+
 		return nil, err
 	}
 
-	block, _ := pem.Decode(c)
-	return x509.ParsePKCS1PrivateKey(block.Bytes)
+	return x509.ParsePKCS1PrivateKey(p.Bytes)
 }
 
 func (mpm BriMpmDynamic) sha256(b []byte) []byte {
